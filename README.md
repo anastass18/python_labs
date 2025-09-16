@@ -63,3 +63,9 @@ print(f"Длина (символов): {len(name)-2}")
 ```
 
 ![ex5!](/images/lab1/ex5.png)
+
+<h3>Using border-radius Property</h3>
+
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20240222094205/js11.jpg" 
+     width="300px" height="auto" 
+     style="border-radius: 50px;">
