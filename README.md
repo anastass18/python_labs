@@ -12,4 +12,3 @@
 ```
 
 ![ex1!](/images/lab1/ex1.png)
-
