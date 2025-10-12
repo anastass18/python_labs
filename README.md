@@ -221,23 +221,23 @@ if __name__ == "__main__":
 ```python
 def info(fio: str, group: str, gpa: float) -> tuple:
     if not isinstance(fio, str):
-        raise TypeError("fio должно быть строкой")
+        return "TypeError: fio должно быть строкой"
     if not isinstance(group, str):
-        raise TypeError("group должно быть строкой")
+        return "TypeError: group должно быть строкой"
     if not isinstance(gpa, (float, int)):
-        raise TypeError("gpa должно быть числом")
+        return "TypeError: gpa должно быть числом"
     
     if not fio.strip():
-        raise ValueError("ФИО не может быть пустым")
+        return "ValueError: ФИО не может быть пустым"
     if not group.strip():
-        raise ValueError("Группа не может быть пустой")
+        return "ValueError: Группа не может быть пустой"
     if gpa < 0:
-        raise ValueError("GPA не может быть отрицательным")
+        return "ValueError: GPA не может быть отрицательным"
 
     parts = [x.capitalize() for x in fio.strip().split() if x]
     
     if len(parts) < 2:
-        raise ValueError("ФИО должно содержать фамилию и имя")
+        return "ValueError: ФИО должно содержать фамилию и имя"
 
     last_name = parts[0]
     first_initial = parts[1][0].upper() + "."
@@ -253,6 +253,11 @@ def info(fio: str, group: str, gpa: float) -> tuple:
 def format_record(rec: tuple[str, str, float]) -> str:
     fio, group, gpa = rec
     processed_data = info(fio, group, gpa)
+    
+    # Проверяем, вернулась ли ошибка вместо кортежа
+    if isinstance(processed_data, str):
+        return processed_data  # Возвращаем строку с ошибкой
+    
     result = f"{processed_data[0]}, гр. {processed_data[1]}, GPA {processed_data[2]}"
     return result
 
