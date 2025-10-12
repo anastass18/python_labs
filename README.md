@@ -216,7 +216,7 @@ if __name__ == "__main__":
 ```
 ![matrix!](/images/lab2/matrix.png)
 
-### Задание C — tuples.py (не решена)
+### Задание C — tuples.py
 
 ```python
 def info(fio: str, group: str, gpa: float) -> tuple:
