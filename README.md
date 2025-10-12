@@ -254,9 +254,8 @@ def format_record(rec: tuple[str, str, float]) -> str:
     fio, group, gpa = rec
     processed_data = info(fio, group, gpa)
     
-    # Проверяем, вернулась ли ошибка вместо кортежа
     if isinstance(processed_data, str):
-        return processed_data  # Возвращаем строку с ошибкой
+        return processed_data
     
     result = f"{processed_data[0]}, гр. {processed_data[1]}, GPA {processed_data[2]}"
     return result
