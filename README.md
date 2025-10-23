@@ -368,7 +368,7 @@ if __name__ == "__main__":
 ```
 ![text!](/images/lab3/text.png)
 
-## Задание В
+## Задание B — `src/text_stats.py` (скрипт со stdin)
 
 ```python
 from scr.lib.text import normalize, tokenize, count_freq, top_n
@@ -396,3 +396,4 @@ def text_stats(text, beautiful=False):
 
 text_stats("Привет мир привет всем", beautiful=True)
 ```
+![text_stats!](/images/lab3/text_stats.png)
