@@ -397,3 +397,106 @@ def text_stats(text, beautiful=False):
 text_stats("Привет мир привет всем", beautiful=True)
 ```
 ![text_stats!](/images/lab3/text_stats.png)
+
+## Лабораторная работа 4
+
+### Задание A — модуль `src/lab04/io_txt_csv.py`
+
+``` python
+from pathlib import Path # импортируем класс Path из модуля pathlib для удобной работы с путями файлов
+import csv # импортируем модуль для работы с CSV файлами (формат табличных данных)
+import os # импортируем модуль для работы с операционной системой (файлы, папки, пути)
+from typing import Iterable, Sequence # импортируем типы данных для аннотаций (подсказки для программиста)
+                                      # Iterable - любой объект, по которому можно пройтись в цикле
+                                      # Sequence - любой объект с последовательностью элементов (список, кортеж и тд)
+
+def read_text(path: str | Path, encoding: str = "utf-8") -> str: # объявляем функцию для чтения текстовых файлов
+                                                                 # path: str | Path - принимает путь как строку или объект Path
+                                                                 # encoding: str = "utf-8" - кодировка файла (по умолчанию utf-8)
+                                                                 # -> str - функция возвращает строку (текст из файла)
+    try:
+        p = Path(path) # создаем объект Path из переданного пути для удобной работы
+        return p.read_text(encoding=encoding) # читаем весь текст из файла в указанной кодировке и возвращаем его
+    except FileNotFoundError: # ошибка "Файл не найден"
+        return "Такого файла не существует" # возвращаем сообщение об ошибке вместо текста файла
+    except UnicodeDecodeError:# ошибка неправильной кодировки
+        return "Не удалось изменить кодировку"  # возвращаем сообщение об ошибке кодировки
+
+def write_csv(rows: Iterable[Sequence], path: str | Path,  # функция для записи данных в CSV-файл
+              header: tuple[str, ...] | None = None) -> None: # rows: Iterable[Sequence] - данные для записи (список, кортеж и тд)
+                                                              # path: str | Path - путь к файлу для записи
+                                                              # header: tuple[str, ...] | None = None - заголовок таблицы (может быть None)
+                                                              # -> None - функция ничего не возвращает
+    p = Path(path)# преобразуем путь в объект Path для удобной работы
+    rows = list(rows)# преобразуем переданные данные в обычный список (на случай если передали другой тип итератора)
+    
+    with p.open("w", newline="", encoding="utf-8") as f: # открываем файл для записи
+                                                         # "w" - режим записи (перезаписывает файл)
+                                                         # newline="" - для корректной работы с переносами строк в Windows
+                                                         # encoding="utf-8" - кодировка файла
+                                                         # with - гарантирует закрытие файла после работы
+        file_c = csv.writer(f) # создаем объект writer для записи CSV-данных
+        if header is not None and rows == []: # проверка: если заголовок указан, но нет данных для записи (если нет, записываем тестовые данные (a,b) в файл)
+            file_c.writerow(('a','b'))
+        if header is not None: # провека: указан ли заголовок; если нет, записываем заголовок первой строкой в файл
+            file_c.writerow(header)
+        if rows: # проверяем, есть ли данные для записи
+            const = len(rows[0]) # запоминаем длину первой строки (количество столбцов)
+            for r in rows: # проверяем все строки на одинаковую длину
+                if len(r) != const:
+                    raise ValueError("Все строки должны иметь одинаковую длину") # если какая-то строка имеет другое количество элементов, вызываем ошибку - все строки должны быть одинаковой длины
+            for r in rows:
+                file_c.writerow(r) # после проверки записываем все строки данных в CSV-файл
+
+def ensure_parent_dir(path: str | Path) -> None: # Функция для создания родительской директории файла
+                                                 # path: str | Path - путь к файлу
+                                                 # -> None - функция ничего не возвращает
+    p = Path(path) # Преобразуем путь в объект Path
+    parent_dir = p.parent # Получаем путь к родительской директории (папке, где должен лежать файл)
+    parent_dir.mkdir(parents=True, exist_ok=True) # Создаем директорию (папку) если её нет
+                                                  # parents=True - создает все родительские папки по цепочке
+                                                  # exist_ok=True - не вызывает ошибку, если папка уже существует
+print(read_text(r"C:\Users\Анастасия\Desktop\python_labs\input.txt"))# Читаем файл input.txt и выводим его содержимое на экран
+write_csv([("world","count"),("test",3)], r"C:\Users\Анастасия\Desktop\python_labs\check.csv", header=None) # Записываем данные в CSV-файл
+                                                                                                            # [("world","count"),("test",3)] - данные: две строки по два значения
+                                                                                                            # header=None - записываем без заголовка
+```
+#### Терминал
+![terminal!](/images/lab4/terminal.png)
+
+#### input.txt
+![input!](/images/lab4/input_file.png)
+
+#### check.csv
+![check!](/images/lab4/check_file.png)
+
+### Задание B — скрипт `src/lab04/text_report.py`
+
+``` python
+import sys # импортируем встроенный модуль, предоставляет доступ к системным параметрам и функциям
+sys.path.append(r'C:\Users\Анастасия\Desktop\python_labs\scr\lib') # доступ к объектам и функциям
+from text import * # импортирует все функции из файла text
+from io_txt_csv import read_text, write_csv #импортирует конкретные функции 
+
+def stats(text, beautiful=False): # не знаю почему, но эта функция не хотела импортироваться :_)
+    words = tokenize(normalize(text))
+    print(f'Всего слов: {len(words)}')
+    print(f'Уникальных слов: {len(set(words))}')
+    print('Топ-5:')
+    top_words = top_n(count_freq(words), 5)
+    for word, count in top_words:
+            print(f"{word}:{count}")
+
+text_from_file = read_text(r'C:\Users\Анастасия\Desktop\python_labs\data\lab_4\input_2.txt') # читаем текст из указанного файла
+stats(text_from_file) # вызываем функцию и передаем ей прочитанный текст 
+write_csv(top_n(count_freq(tokenize(normalize(text_from_file))), 5), path = r'C:\Users\Анастасия\Desktop\python_labs\data\lab_4\check_2.csv', header= ['word', 'count']) # нормализуем текст, разбиваем на слова, получаем топ-5 слов
+```
+
+#### Терминал
+![terminal2!](/images/lab4/terminal2.png)
+
+#### input_2.txt
+![input2!](/images/lab4/input2.png)
+
+#### check_2.csv
+![check2!](/images/lab4/check2.png)
