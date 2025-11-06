@@ -571,11 +571,11 @@ json_to_csv(
 
 ![people_CSV!](/images/lab5/people_CSV.png)
 
-![PFC!](/images/lab5/PFC.png)
+![PFJ!](/images/lab5/PFJ.png)
 
 ![people_JSON!](/images/lab5/people_JSON.png)
 
-![PFJ!](/images/lab5/PFJ.png)
+![PFC!](/images/lab5/PFC.png)
 
 ### Задание B — CSV → XLSX
 
