@@ -629,3 +629,111 @@ csv_to_excel(r"C:\Users\Анастасия\Desktop\python_labs\data\samples\citi
 ![cities!](/images/lab5/cities.png)
 
 ![people_xlsx!](/images/lab5/people_xlsx.png)
+
+## Лабораторная работа 6
+
+### Задание 1
+
+``` python
+import  argparse # импортируем библиотеку для обработки аргументов командной строки
+from scr.lib.text import * # импортируем все функции из нашего модуля обработки текста
+
+def cat(text, n):
+    file = open(text, "r").readlines() # открываем файл и читаем все строки в список
+    if not n: # если флаг -n не установлен (простой вывод)
+        for i in file:
+            print(i.replace("\n", ""))
+    else:
+        file = enumerate(file) # если флаг -n установлен (вывод с нумерацией)
+                         # добавляем номера строкам с помощью enumerate
+        for i in file:
+            print(i[0],i[1].replace("\n", ""))
+
+
+def stats(txt,n):
+    file = open(txt, "r").read() # читаем весь файл как одну строку
+    txt = top_n(count_freq(tokenize(normalize(file))),n) # обрабатываем текст: нормализуем - разбиваем на слова - считаем частоты - берем топ-N
+    for a in txt:
+        print(a[1],a[0])
+
+parser = argparse.ArgumentParser("CLI‑утилиты лабораторной №6")
+subparsers = parser.add_subparsers(dest="command")
+
+# подкоманда cat
+cat_parser = subparsers.add_parser("cat",help = "Вывести содержимое файла")
+cat_parser.add_argument("--input",required = True)
+cat_parser.add_argument("-n", action="store_true",help = "Нумировать строки")
+
+# подкоманда stats
+stats_parser = subparsers.add_parser("stats",help = "Частоты слез")
+stats_parser.add_argument("--input",required = True)
+stats_parser.add_argument("--top",type = int, default = 5)
+
+args = parser.parse_args() # разбираем аргументы командной строки
+
+if args.command == "cat":
+    cat(args.input,args.n)
+
+if args.command == "stats":
+    stats(args.input,args.top)
+```
+
+![list!](/images/lab6/list.png)
+
+![cat!](/images/lab6/cat.png)
+
+![stats!](/images/lab6/stats.png)
+
+### Задание 2
+
+``` python
+import argparse
+from scr.lab5.csv_xlsx import csv_to_excel
+from scr.lab5.json_csv import json_to_csv, csv_to_json
+
+parser = argparse.ArgumentParser("CLI‑утилиты лабораторной №6")
+subparsers = parser.add_subparsers(dest="command")
+
+json2csv_parser = subparsers.add_parser("json2csv",help = "Первевести json в csv")
+json2csv_parser.add_argument("--in",required=True,dest='input')
+json2csv_parser.add_argument("--out",required=True)
+
+csv2json_parser = subparsers.add_parser("csv2json",help = "Перевести csv в json")
+csv2json_parser.add_argument("--in",required=True,dest='input')
+csv2json_parser.add_argument("--out",required=True)
+
+csv2xlsx_parser = subparsers.add_parser("csv2xlsx",help = "Первевести csv в xlsx")
+csv2xlsx_parser.add_argument("--in",required=True,dest='input')
+csv2xlsx_parser.add_argument("--out",required=True)
+
+args = parser.parse_args()
+
+if args.command == "json2csv":
+    json_to_csv(args.input,args.out)
+
+if args.command == "csv2json":
+    csv_to_json(args.input,args.out)
+
+if args.command == "csv2xlsx":
+    csv_to_excel(args.input,args.out)
+```
+
+![comands!](/images/lab6/comands.png)
+
+```
+python -m scr.lab6.cli_convert csv2xlsx --in "data/samples/cities.csv" --out "data/out/people.xlsx"
+```
+
+![tablichka!](/images/lab5/people_xlsx.png)
+
+```
+python -m scr.lab6.cli_convert json2csv --in "data/samples/people.json" --out "data/out/people_from_json.csv"
+```
+
+![PFJ!](/images/lab5/PFJ.png)
+
+```
+python -m scr.lab6.cli_convert csv2json --in "data/samples/people.csv" --out "data/out/people_from_csv.json"
+```
+
+![PFC!](/images/lab5/PFC.png) 
