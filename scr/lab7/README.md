@@ -17,14 +17,10 @@ class TestText:
     @pytest.mark.parametrize(
         "input_text, expected",
         [
-            ("Hello world", "hello world"),
-            (" PYTHON  Programming  ", "python programming"),
-            ("Test123", "test123"),
-            ("", ""),
-            ("  ", ""),
-            ("Hello!!??", "hello!!??"),
-            ("Привет Мир", "привет мир"),
-            ("café", "café"),
+            ("привет\nмир\t", "привет мир"),
+            ("ёжик, Ёлка", "ежик, елка"),
+            ("hello\r\nworld", "hello world"),
+            ("  двойные   пробелы  ", "двойные пробелы"),
         ],
     )
     def test_normalize(self, input_text, expected):
@@ -144,3 +140,4 @@ def test_json_to_csv(function, input_file, error, tmp_path: Path):
 ### C. Стиль кода (```black```)
 
 ![black!](/images/lab7/black.png)
+
