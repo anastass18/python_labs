@@ -758,14 +758,10 @@ class TestText:
     @pytest.mark.parametrize(
         "input_text, expected",
         [
-            ("Hello world", "hello world"),
-            (" PYTHON  Programming  ", "python programming"),
-            ("Test123", "test123"),
-            ("", ""),
-            ("  ", ""),
-            ("Hello!!??", "hello!!??"),
-            ("Привет Мир", "привет мир"),
-            ("café", "café"),
+            ("привет\nмир\t", "привет мир"),
+            ("ёжик, Ёлка", "ежик, елка"),
+            ("hello\r\nworld", "hello world"),
+            ("  двойные   пробелы  ", "двойные пробелы"),
         ],
     )
     def test_normalize(self, input_text, expected):
