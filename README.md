@@ -881,3 +881,5 @@ def test_json_to_csv(function, input_file, error, tmp_path: Path):
 ### C. Стиль кода (```black```)
 
 ![black!](/images/lab7/black.png)
+
+### lol
