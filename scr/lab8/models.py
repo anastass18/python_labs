@@ -9,8 +9,7 @@ class Student:
     group: str
     gpa: float
     
-    # Приватное поле для формата даты
-    __date_format: ClassVar[str] = "%Y-%m-%d"
+    __date_format: ClassVar[str] = "%Y-%m-%d" # приватное поле для формата даты
     
     def __post_init__(self): # валидация данных после инициализации
         self._validate_birthdate()
@@ -29,15 +28,12 @@ class Student:
     def age(self) -> int: # вернуть количество полных лет
         birth_date = datetime.strptime(self.birthdate, self.__date_format).date()
         today = date.today()
-        
-        age = today.year - birth_date.year
-        
-        # Проверяем, был ли уже день рождения в этом году
+        age = today.year - birth_date.year # проверяем, был ли уже день рождения в этом году
         if today.month < birth_date.month or (today.month == birth_date.month and today.day < birth_date.day):
             age -= 1
         return age
     
-    def to_dict(self) -> dict: # Сериализация в словарь
+    def to_dict(self) -> dict: # сериализация в словарь
         return {
             "fio": self.fio,
             "birthdate": self.birthdate,

@@ -27,16 +27,12 @@ def students_from_json(path: str) -> List[Student]: # Читает JSON-масс
     students = []
     for i, item in enumerate(data):
         try:
-            # Проверяем обязательные поля
-            required_fields = ['fio', 'birthdate', 'group', 'gpa']
+            required_fields = ['fio', 'birthdate', 'group', 'gpa'] # проверяем обязательные поля
             for field in required_fields:
                 if field not in item:
                     raise ValueError(f"Отсутствует обязательное поле '{field}' в элементе {i}")
-            
-            # Создаем студента (валидация происходит в __post_init__)
-            student = Student.from_dict(item)
+            student = Student.from_dict(item) # создаем студента (валидация происходит в __post_init__)
             students.append(student)
-            
         except ValueError as e:
             raise ValueError(f"Ошибка валидации в элементе {i}: {e}")
         except Exception as e:
