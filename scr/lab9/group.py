@@ -9,22 +9,18 @@ from models_copy import Student
 
 class Group:
     def __init__(self, storage_path: str):
-        # Создаем полный путь к файлу в data/lab_9
-        self.path = Path("data/lab_9") / storage_path
+        self.path = Path("data/lab_9") / storage_path # Создаем полный путь к файлу в data/lab_9
         self._ensure_storage_exists()
     
     def _ensure_storage_exists(self):
-        """Создать файл с заголовком, если его ещё нет"""
-        # Создаем папку data/lab_9 если её нет
-        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.parent.mkdir(parents=True, exist_ok=True) # Создаем папку data/lab_9 если её нет
         
         if not self.path.exists():
             with open(self.path, 'w', encoding='utf-8', newline='') as f:
                 writer = csv.DictWriter(f, fieldnames=['fio', 'birthdate', 'group', 'gpa'])
                 writer.writeheader()
     
-    def _read_all(self) -> List[Dict[str, Any]]:
-        """Прочитать все строки из CSV"""
+    def _read_all(self) -> List[Dict[str, Any]]: # Прочитать все строки из CSV
         rows = []
         with open(self.path, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
@@ -33,15 +29,13 @@ class Group:
                 rows.append(row)
         return rows
     
-    def _write_all(self, rows: List[Dict[str, Any]]):
-        """Записать все строки в CSV"""
+    def _write_all(self, rows: List[Dict[str, Any]]): # Записать все строки в CSV
         with open(self.path, 'w', encoding='utf-8', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=['fio', 'birthdate', 'group', 'gpa'])
             writer.writeheader()
             writer.writerows(rows)
     
-    def list(self) -> List[Student]:
-        """Вернуть всех студентов в виде списка Student"""
+    def list(self) -> List[Student]: # Вернуть всех студентов в виде списка Student
         rows = self._read_all()
         students = []
         for row in rows:
@@ -52,8 +46,7 @@ class Group:
                 print(f"Ошибка валидации студента {row['fio']}: {e}")
         return students
     
-    def add(self, student: Student):
-        """Добавить нового студента в CSV"""
+    def add(self, student: Student): # Добавить нового студента в CSV
         try:
             validated_student = Student(
                 fio=student.fio,
@@ -68,13 +61,11 @@ class Group:
             writer = csv.DictWriter(f, fieldnames=['fio', 'birthdate', 'group', 'gpa'])
             writer.writerow(validated_student.to_dict())
     
-    def find(self, substr: str) -> List[Student]:
-        """Найти студентов по подстроке в fio"""
+    def find(self, substr: str) -> List[Student]: # Найти студентов по подстроке в fio
         students = self.list()
         return [student for student in students if substr.lower() in student.fio.lower()]
     
-    def remove(self, fio: str):
-        """Удалить запись(и) с данным fio"""
+    def remove(self, fio: str): # Удалить запись(и) с данным fio
         rows = self._read_all()
         updated_rows = [row for row in rows if row['fio'] != fio]
         
@@ -83,8 +74,7 @@ class Group:
         
         self._write_all(updated_rows)
     
-    def update(self, fio: str, **fields):
-        """Обновить поля существующего студента"""
+    def update(self, fio: str, **fields): # Обновить поля существующего студента
         rows = self._read_all()
         updated = False
         
@@ -104,8 +94,7 @@ class Group:
         
         self._write_all(rows)
     
-    def stats(self) -> Dict[str, Any]:
-        """Статистика по группе"""
+    def stats(self) -> Dict[str, Any]: # Статистика по группе
         students = self.list()
         
         if not students:
@@ -135,24 +124,20 @@ class Group:
             "top_5_students": top_5
         }
     
-    def exists(self, fio: str) -> bool:
-        """Проверить существует ли студент с таким ФИО"""
+    def exists(self, fio: str) -> bool: # Проверить существует ли студент с таким ФИО
         students = self.list()
         return any(student.fio == fio for student in students)
 
-    def is_empty(self) -> bool:
-        """Проверить пуст ли файл (только заголовок)"""
+    def is_empty(self) -> bool: # Проверить пуст ли файл (только заголовок)
         with open(self.path, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             return len(list(reader)) == 0
     
 if __name__ == "__main__":
-    # Создаем группу
-    group = Group("students.csv")
-    
-    # Добавляем студентов
-    if group.is_empty():
-        print("🆕 Создаем тестовых студентов...")
+
+    group = Group("students.csv") # Создаем группу
+
+    if group.is_empty(): # Добавляем студентов
         students_to_add = [
             Student("Иванов Иван", "2000-05-15", "БИВТ-21-1", 4.5),
             Student("Петрова Анна", "2001-12-03", "БИВТ-21-2", 3.8),
@@ -192,5 +177,5 @@ if __name__ == "__main__":
     #print(f"\nПосле обновления Иванова: {group.find('Иванов Иван')[0]}")
     
     # Удаление студента
-    group.remove("Новиков Дмитрий")
-    print(f"\nПосле удаления Новикова, всего студентов: {len(group.list())}")
+    #group.remove("Новиков Дмитрий")
+    #print(f"\nПосле удаления Новикова, всего студентов: {len(group.list())}")
