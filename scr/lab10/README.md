@@ -158,6 +158,8 @@ class Queue: # Структура данных 'Очередь' (FIFO - First In
 
 ### B. Реализовать `SinglyLinkedList` (`src/lab10/linked_list.py`)
 
+#### linked_list.py
+
 ``` python
 from typing import Any, Optional, Iterator
 
