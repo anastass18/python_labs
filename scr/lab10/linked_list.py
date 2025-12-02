@@ -165,4 +165,4 @@ if __name__ == "__main__":
    lst.prepend(0)
    lst.insert(2, 1.5)
    lst.remove_at(3)
-   print(lst)  # SinglyLinkedList([0, 1, 2])
+   print(lst)
